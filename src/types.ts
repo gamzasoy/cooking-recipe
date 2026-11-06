@@ -8,6 +8,8 @@ export interface Ingredient {
   /** null이면 "약간", "적당량"처럼 수량이 없는 재료 */
   amount: number | null;
   unit: string;
+  /** 재료 묶음 이름 (예: '양념', '육수'). 없으면 기본 재료 */
+  group?: string;
 }
 
 export interface Step {

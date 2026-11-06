@@ -19,8 +19,10 @@ export function scaleAmount(amount: number, baseServings: number, targetServings
 /** 단위에 맞게 보기 좋은 숫자 문자열로 변환한다. */
 export function formatAmount(value: number, unit: string): string {
   if (METRIC_UNITS.has(unit.toLowerCase())) {
-    const rounded = value >= 100 ? Math.round(value / 5) * 5 : Math.round(value);
-    return String(Math.max(rounded, 1));
+    if (value >= 100) return String(Math.round(value / 5) * 5);
+    if (value >= 10) return String(Math.round(value));
+    // 10 미만은 소수 첫째 자리까지 (예: 0.5g)
+    return String(Math.max(Math.round(value * 10) / 10, 0.1));
   }
   // 개, 큰술 등은 가장 가까운 분수로 표기 (최소 ¼)
   let whole = Math.floor(value);

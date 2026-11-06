@@ -12,6 +12,11 @@ describe('formatAmount', () => {
     expect(formatAmount(33.3, 'g')).toBe('33');
     expect(formatAmount(266.6, 'ml')).toBe('265');
   });
+  it('10g 미만은 소수 첫째 자리까지 표기한다', () => {
+    expect(formatAmount(0.5, 'g')).toBe('0.5');
+    expect(formatAmount(1.25, 'g')).toBe('1.3');
+    expect(formatAmount(3, 'g')).toBe('3');
+  });
   it('그 외 단위는 ¼ 단위 분수로 표기한다', () => {
     expect(formatAmount(1.5, '큰술')).toBe('1½');
     expect(formatAmount(0.25, '개')).toBe('¼');
