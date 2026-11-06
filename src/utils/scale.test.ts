@@ -18,6 +18,12 @@ describe('formatAmount', () => {
     expect(formatAmount(0.1, '개')).toBe('¼');
     expect(formatAmount(3, '개')).toBe('3');
     expect(formatAmount(0.75, '모')).toBe('¾');
+    expect(formatAmount(1.95, '개')).toBe('2');
+  });
+  it('⅓, ⅔ 분수도 표기한다', () => {
+    expect(formatAmount(1 / 3, '큰술')).toBe('⅓');
+    expect(formatAmount(2 / 3, '큰술')).toBe('⅔');
+    expect(formatAmount(4 / 3, '큰술')).toBe('1⅓');
   });
 });
 

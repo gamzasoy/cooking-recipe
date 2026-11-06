@@ -1,7 +1,16 @@
 import type { Ingredient } from '../types';
 
 const METRIC_UNITS = new Set(['g', 'kg', 'ml', 'l']);
-const FRACTIONS: Record<number, string> = { 0.25: '¼', 0.5: '½', 0.75: '¾' };
+/** 표시할 수 있는 분수 (¼, ⅓, ½, ⅔, ¾) */
+const FRACTIONS: [number, string][] = [
+  [0, ''],
+  [1 / 4, '¼'],
+  [1 / 3, '⅓'],
+  [1 / 2, '½'],
+  [2 / 3, '⅔'],
+  [3 / 4, '¾'],
+  [1, ''],
+];
 
 export function scaleAmount(amount: number, baseServings: number, targetServings: number): number {
   return (amount * targetServings) / baseServings;
@@ -13,12 +22,17 @@ export function formatAmount(value: number, unit: string): string {
     const rounded = value >= 100 ? Math.round(value / 5) * 5 : Math.round(value);
     return String(Math.max(rounded, 1));
   }
-  // 개, 큰술 등은 ¼ 단위로 반올림 (최소 ¼)
-  const quarter = Math.max(Math.round(value * 4) / 4, 0.25);
-  const whole = Math.floor(quarter);
-  const frac = quarter - whole;
-  if (frac === 0) return String(whole);
-  const fracStr = FRACTIONS[frac];
+  // 개, 큰술 등은 가장 가까운 분수로 표기 (최소 ¼)
+  let whole = Math.floor(value);
+  const rest = value - whole;
+  let [frac, fracStr] = FRACTIONS.reduce((best, cur) =>
+    Math.abs(cur[0] - rest) < Math.abs(best[0] - rest) ? cur : best,
+  );
+  if (frac === 1) {
+    whole += 1;
+    frac = 0;
+  }
+  if (whole === 0 && frac === 0) return '¼';
   return whole > 0 ? `${whole}${fracStr}` : fracStr;
 }
 
